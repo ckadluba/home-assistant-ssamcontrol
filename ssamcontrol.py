@@ -1,3 +1,4 @@
+import hashlib
 import requests
 
 @service
@@ -10,7 +11,7 @@ fields:
      description: login name of the SSAMControl account
      required: true
   password:
-     description: hashed password of the SSAMControl account
+     description: password of the SSAMControl account
      required: true
   pin_code:
      description: numeric PIN code configured for the alarm panel
@@ -26,16 +27,23 @@ fields:
            - disarm
 """
     # Request auth token
+    password_hash_obj = hashlib.md5(password.encode())
+    password_hash = password_hash_obj.hexdigest()
     auth_url = "https://admin.ssamcontrol.com/REST/v2/auth/login"
     auth_body = {
         "account": account,
-        "password": password,
+        "password": password_hash,
         "dealer_group": "",
         "pw_encrypted": "hashed",
         "login_entry": "web"
     }
     log.info("Sending token request to %s", auth_url)
     auth_response = task.executor(requests.post, auth_url, data=auth_body)
+    if auth_response.status_code != 200:
+        log.error("Error getting token: %s", auth_response.text)
+        return
+    else:
+        log.info("Received auth token")
     auth_response_json = auth_response.json()
     token = auth_response_json["token"]
     

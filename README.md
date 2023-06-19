@@ -21,11 +21,10 @@ That being said, I have to add that I take absolutely no responsibility for any 
 2. In the secrets file /config/secrets.yaml create the following secrets for the ssamcontrol script. Replace the strings in angle brackets with your values.
    ```yaml
    ssamcontrol_account: <your ssamcontrol username>
-   ssamcontrol_password: <your ssamcontrol hashed password>
+   ssamcontrol_password: <your ssamcontrol password>
    ssamcontrol_pin_code: <your panel pin code>
 
    ```
-   The hashed password can be easily gathered if you login to https://admin.ssamcontrol.com/home/ and check the body of token request that is sent in the browser dev tools (Ctrl-Shift-I).
 3. Optional: define a switch to be able to use the script conveniently with your secrets. Insert the following into your  config/configuration.yaml.
    ```yaml
    switch:
